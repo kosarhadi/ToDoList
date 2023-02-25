@@ -15,6 +15,11 @@ class Task:
 
         Task.count-=1
 
+    def __str__(self) -> str:
+        
+        string=self.title +" "+self.status +" "+self.date
+        return string
+
         
 
     

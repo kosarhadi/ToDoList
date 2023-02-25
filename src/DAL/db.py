@@ -28,7 +28,7 @@ def get_user(db,un):
 
 def seeder_taskdb(db):
 
-    T1=Task('creat todo list','in progress','12/10',0)
+    T1=Task('create todo list','in progress','12/10',0)
     db.append(T1)
 
     T2=Task('read book','to do','12/11',0)
@@ -39,6 +39,14 @@ def seeder_taskdb(db):
 
     T4=Task('check list','to do','01/30',4)
     db.append(T4)
+
+def get_task(db,ui):
+
+    showlist=[]
+    for i in db:
+        if i.userid == ui:
+            showlist.append(i)
+    return showlist
 
 
 
