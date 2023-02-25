@@ -24,6 +24,14 @@ def get_user(db,un):
     for i in db:
         if i.user_name == un:
             return i
+        
+            
+        
+def set_user(usename,password,dbuser):
+    
+    U=User(usename,password)
+    dbuser.append(U)
+
 
 
 def seeder_taskdb(db):
