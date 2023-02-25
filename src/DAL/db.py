@@ -19,7 +19,11 @@ def seeder_userdb(db):
     U5=User('admin','0000')
     db.append(U5)
 
-    return db
+def get_user(db,un):
+
+    for i in db:
+        if i.user_name == un:
+            return i
 
 
 def seeder_taskdb(db):
@@ -35,8 +39,6 @@ def seeder_taskdb(db):
 
     T4=Task('check list','to do','01/30',4)
     db.append(T4)
-
-    return db
 
 
 
