@@ -17,7 +17,7 @@ class Task:
 
     def __str__(self) -> str:
         
-        string=self.title +" "+self.status +" "+self.date
+        string=str(self.id) +". "+self.title +" "+self.status +" "+self.date
         return string
 
         

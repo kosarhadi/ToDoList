@@ -19,18 +19,16 @@ def seeder_userdb(db):
     U5=User('admin','0000')
     db.append(U5)
 
-def get_user(db,un):
+def get_user(username,user_db):
 
-    for i in db:
-        if i.user_name == un:
+    for i in user_db:
+        if i.user_name == username:
             return i
-        
-            
-        
-def set_user(usename,password,dbuser):
+                      
+def set_user(username,password,user_db):
     
-    U=User(usename,password)
-    dbuser.append(U)
+    U=User(username,password)
+    user_db.append(U)
 
 
 
@@ -48,13 +46,34 @@ def seeder_taskdb(db):
     T4=Task('check list','to do','01/30',4)
     db.append(T4)
 
-def get_task(db,ui):
+def get_user_tasks(userid,task_db):
 
     showlist=[]
-    for i in db:
-        if i.userid == ui:
+    for i in task_db:
+        if i.userid == userid:
             showlist.append(i)
     return showlist
 
+def set_change_task(change_text,which_item,taskid,task_db):
+     
+     which_item=int(which_item)
 
+     for i in task_db:
+        if i.id == taskid:
+            if which_item == 1:
+                i.title = change_text
+            elif which_item == 2:
+                i.status = change_text
+            elif which_item == 3:
+                i.date = change_text
+            
+def set_task(title,status,date,task_db,userid):
+    
+    T=Task(title,status,date,userid)
+    task_db.append(T)
 
+def delete(taskid,task_db):
+
+    for i in task_db:
+        if i.id == taskid:
+            task_db.remove(i)
