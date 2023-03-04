@@ -1,6 +1,60 @@
 from Models import User
 from Models import Task
 
+import mysql.connector as database
+
+def connect():
+    connection = database.connect(
+        user="root",
+        password="1@admin",
+        host="127.0.0.1",
+        database="db_ToDoList")
+    return connection
+
+def create_table_user(connection):
+    cursor = connection.cursor()
+    try:
+        statement = "CREATE TABLE user (id INT, username VARCHAR(50), password VARCHAR(50))"
+        cursor.execute(statement)
+        connection.commit()
+        print("Successfully create table")
+    except database.Error as e:
+        print(f"Error create table: {e}")
+    cursor.close()
+
+def create_table_task(connection):
+    cursor = connection.cursor()
+    try:
+        statement = "CREATE TABLE task (id INT, title VARCHAR(50), status VARCHAR(50), status VARCHAR(50), user_id INT)"
+        cursor.execute(statement)
+        connection.commit()
+        print("Successfully create table")
+    except database.Error as e:
+        print(f"Error create table: {e}")
+    cursor.close()
+
+def add_data_user(user,connection):
+    cursor = connection.cursor()
+    try:
+        statement = "INSERT INTO user (id,username,password) VALUES (%s, %s, %s)"
+        data = (user.id,user.user_name,user.password)
+        cursor.execute(statement, data)
+        connection.commit()
+        print("Successfully added entry to database")
+    except database.Error as e:
+        print(f"Error adding entry to database: {e}")
+    cursor.close()
+
+def get_data(last_name):
+    try:
+      statement = "SELECT first_name, last_name FROM employees WHERE last_name=%s"
+      data = (last_name,)
+      cursor.execute(statement, data)
+      for (first_name, last_name) in cursor:
+        print(f"Successfully retrieved {first_name}, {last_name}")
+    except database.Error as e:
+      print(f"Error retrieving entry from database: {e}")
+
 
 def seeder_userdb(db):
 
