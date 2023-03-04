@@ -1,0 +1,11 @@
+import os
+import mysql.connector as database
+. . .
+username = os.environ.get("root")
+password = os.environ.get("1273")
+. . .
+connection = database.connect(
+    user=username,
+    password=password,
+    host=localhost,
+    database="workplace")root
