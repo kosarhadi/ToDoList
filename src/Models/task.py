@@ -1,9 +1,7 @@
-import itertools
 class Task:
     count=0
-    id_obj=itertools.count()
-    def __init__(self,title,status,date,userid):
-        self.id=next(Task.id_obj)
+    def __init__(self,title,status,date,userid,id=0):
+        self.id=id
         self.title=title
         self.status=status
         self.date=date

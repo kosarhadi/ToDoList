@@ -1,9 +1,7 @@
-import itertools
 class User:
     count=0
-    id_obj=itertools.count()
-    def __init__(self,user_name,password):
-        self.id=next(User.id_obj)
+    def __init__(self,user_name,password,id=0):
+        self.id=id
         self.user_name=user_name
         self.password=password
 

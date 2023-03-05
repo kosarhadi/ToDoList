@@ -1,27 +1,35 @@
-from DAL import get_user_tasks
+from Models import Task
 from DAL import set_change_task
-from DAL import set_task
-from DAL import delete
+from DAL import connect
 
-from DAL import get_user
+from DAL import get_data_user
 
-def show_task(user_db,task_db,username):
+from DAL import add_data_task
+from DAL import get_data_task
+from DAL import delete_data_task
 
-    user=get_user(username,user_db)
-    return get_user_tasks(user.id,task_db)
 
-def create_task(title,status,date,task_db,username,user_db):
+def show_task(username):
 
-    user=get_user(username,user_db)
-    set_task(title,status,date,task_db,user.id)
+    connection=connect()
+    user=get_data_user(username,connection)
+    return get_data_task(user.id,connection)
 
+def create_task(title,status,date,username):
+
+    connection=connect()
+    user=get_data_user(username,connection)
+    task=Task(title,status,date,user.id)
+    add_data_task(task,connection)
+    
 def update_task(change_text,which_item,taskid,task_db):
 
     return set_change_task(change_text,which_item,taskid,task_db)
 
-def delete_task(taskid,task_db):
+def delete_task(taskid):
 
-    delete(taskid,task_db)
+    connection=connect()
+    delete_data_task(taskid,connection)
 
     
 

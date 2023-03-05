@@ -11,102 +11,122 @@ def connect():
         database="db_ToDoList")
     return connection
 
+
 def create_table_user(connection):
     cursor = connection.cursor()
     try:
-        statement = "CREATE TABLE user (id INT, username VARCHAR(50), password VARCHAR(50))"
+        statement = "CREATE TABLE user (id INT AUTO_INCREMENT, username VARCHAR(50), password VARCHAR(50), PRIMARY KEY(id))"
         cursor.execute(statement)
         connection.commit()
-        print("Successfully create table")
+        print("Successfully create table user")
     except database.Error as e:
         print(f"Error create table: {e}")
     cursor.close()
 
-def create_table_task(connection):
+def seeder_db_user(connection):
+
     cursor = connection.cursor()
     try:
-        statement = "CREATE TABLE task (id INT, title VARCHAR(50), status VARCHAR(50), status VARCHAR(50), user_id INT)"
-        cursor.execute(statement)
+        statement = "INSERT INTO user (username,password) VALUES (%s, %s)"
+        data = [
+                ('kosar','1273'),
+                ('habib','1234'),
+                ('fatemeh','5678'),
+                ('user','0000'),
+                ('admin','0000')
+                ]
+        cursor.executemany(statement, data)
         connection.commit()
-        print("Successfully create table")
+        print(cursor.rowcount,"Record inserted Successfully added into user table")
     except database.Error as e:
-        print(f"Error create table: {e}")
+        print(f"Error adding entry to database: {e}")
     cursor.close()
 
 def add_data_user(user,connection):
     cursor = connection.cursor()
     try:
-        statement = "INSERT INTO user (id,username,password) VALUES (%s, %s, %s)"
-        data = (user.id,user.user_name,user.password)
+        statement = "INSERT INTO user (username,password) VALUES (%s, %s)"
+        data = (user.user_name,user.password)
         cursor.execute(statement, data)
         connection.commit()
-        print("Successfully added entry to database")
+        print("Successfully added entry to user table")
+    except database.Error as e:
+        print(f"Error adding entry to user table: {e}")
+    cursor.close()
+
+def get_data_user(username,connection):
+    cursor = connection.cursor()
+    try:
+      statement = "SELECT id ,username ,password FROM user WHERE username=%s"
+      data = (username,)
+      cursor.execute(statement, data)
+      result = cursor.fetchone()
+      user=User(result[1],result[2],result[0])
+      return user
+    except database.Error as e:
+      print(f"Error retrieving entry from database: {e}")
+    cursor.close()
+
+    
+def create_table_task(connection):
+    cursor = connection.cursor()
+    try:
+        statement = "CREATE TABLE task (id INT AUTO_INCREMENT, title VARCHAR(50), status ENUM('todo','done'), date VARCHAR(50), user_id INT, PRIMARY KEY(id))"
+        cursor.execute(statement)
+        connection.commit()
+        print("Successfully create table task")
+    except database.Error as e:
+        print(f"Error create table: {e}")
+    cursor.close()
+
+def seeder_db_task(connection):
+
+    cursor = connection.cursor()
+    try:
+        statement = "INSERT INTO task (title,status,date,user_id) VALUES (%s, %s, %s, %s)"
+        data = [
+                ('create todolist api','todo','12/24',1),
+                ('create db','done','12/12',1),
+                ('travel','todo','12/18',2),
+                ('nothing','todo','12/29',3),
+                ('say welcom','done','12/01',4)
+                ]
+        cursor.executemany(statement, data)
+        connection.commit()
+        print(cursor.rowcount,"Record inserted Successfully added into task table")
     except database.Error as e:
         print(f"Error adding entry to database: {e}")
     cursor.close()
 
-def get_data(last_name):
+def add_data_task(task,connection):
+    cursor = connection.cursor()
     try:
-      statement = "SELECT first_name, last_name FROM employees WHERE last_name=%s"
-      data = (last_name,)
+        statement = "INSERT INTO task (title,status,date,user_id) VALUES (%s, %s, %s, %s)"
+        data = (task.title,task.status,task.date,task.userid)
+        cursor.execute(statement, data)
+        connection.commit()
+        print("Successfully added entry to task table")
+    except database.Error as e:
+        print(f"Error adding entry to task table: {e}")
+    cursor.close()
+
+def get_data_task(userid,connection):
+
+    cursor = connection.cursor()
+    try:
+      statement = "SELECT id ,title ,status ,date ,user_id FROM task WHERE user_id=%s"
+      data = (userid,)
       cursor.execute(statement, data)
-      for (first_name, last_name) in cursor:
-        print(f"Successfully retrieved {first_name}, {last_name}")
+      result = cursor.fetchall()
+      cursor.close()
+      returnlist=[]
+      for i in result:
+          task=Task(i[1],i[2],i[3],i[4],i[0])
+          returnlist.append(task)
+      return returnlist
     except database.Error as e:
       print(f"Error retrieving entry from database: {e}")
-
-
-def seeder_userdb(db):
-
-    U1=User('kosar','1273')
-    db.append(U1)
-
-    U2=User('habib','6859')
-    db.append(U2)
-
-    U3=User('fatemeh','1379')
-    db.append(U3)
-
-    U4=User('user','1111')
-    db.append(U4)
-
-    U5=User('admin','0000')
-    db.append(U5)
-
-def get_user(username,user_db):
-
-    for i in user_db:
-        if i.user_name == username:
-            return i
-                      
-def set_user(username,password,user_db):
-    
-    U=User(username,password)
-    user_db.append(U)
-
-
-
-def seeder_taskdb(db):
-
-    T1=Task('create todo list','in progress','12/10',0)
-    db.append(T1)
-
-    T2=Task('read book','to do','12/11',0)
-    db.append(T2)
-
-    T3=Task('Training','in progress','01/30',1)
-    db.append(T3)
-
-    T4=Task('check list','to do','01/30',4)
-    db.append(T4)
-
-def get_user_tasks(userid,task_db):
-
-    showlist=[]
-    for i in task_db:
-        if i.userid == userid:
-            showlist.append(i)
-    return showlist
+    cursor.close()
 
 def set_change_task(change_text,which_item,taskid,task_db):
      
@@ -121,13 +141,15 @@ def set_change_task(change_text,which_item,taskid,task_db):
             elif which_item == 3:
                 i.date = change_text
             
-def set_task(title,status,date,task_db,userid):
-    
-    T=Task(title,status,date,userid)
-    task_db.append(T)
+def delete_data_task(taskid,connection):
 
-def delete(taskid,task_db):
-
-    for i in task_db:
-        if i.id == taskid:
-            task_db.remove(i)
+    cursor = connection.cursor()
+    try:
+        statement = "DELETE FROM task WHERE id=(%s)"
+        data = (taskid,)
+        cursor.execute(statement, data)
+        connection.commit()
+        print("Successfully delete entry to task table")
+    except database.Error as e:
+        print(f"Error deleting entry to task table: {e}")
+    cursor.close()
