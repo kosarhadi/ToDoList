@@ -1,6 +1,6 @@
 from .db import seeder_db_user
 from .db import seeder_db_task
-from .db import set_change_task
+from .db import update_data_task
 
 from .db import connect
 

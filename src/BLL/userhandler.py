@@ -10,6 +10,7 @@ def sign_in(username,password):
 
     connection=connect()
     user=get_data_user(username,connection)
+    connection.close()
     if user:
         if user.password == password:
             return True
@@ -25,8 +26,10 @@ def sign_up(username,password):
     if not user:
         user=User(username,password)
         add_data_user(user,connection)
+        connection.close()
         return True
     else:
+        connection.close()
         return False
         
     

@@ -128,19 +128,28 @@ def get_data_task(userid,connection):
       print(f"Error retrieving entry from database: {e}")
     cursor.close()
 
-def set_change_task(change_text,which_item,taskid,task_db):
-     
-     which_item=int(which_item)
+def update_data_task(change_text,which_item,taskid,connection):
+    cursor = connection.cursor()
 
-     for i in task_db:
-        if i.id == taskid:
-            if which_item == 1:
-                i.title = change_text
-            elif which_item == 2:
-                i.status = change_text
-            elif which_item == 3:
-                i.date = change_text
-            
+    try:
+        which_item=int(which_item)
+        if which_item == 1:
+            statement = "UPDATE task SET title = (%s) WHERE id = (%s)"
+            data = (change_text,taskid)
+
+        elif which_item == 2:
+            statement = "UPDATE task SET status = (%s) WHERE id = (%s)"
+            data = (change_text,taskid)    
+        elif which_item == 3:
+            statement = "UPDATE task SET date = (%s) WHERE id = (%s)"
+            data = (change_text,taskid)     
+        cursor.execute(statement, data)
+        connection.commit()
+        print("Successfully updated task table")
+    except database.Error as e:
+        print(f"Error in updating task table: {e}")
+    cursor.close()
+     
 def delete_data_task(taskid,connection):
 
     cursor = connection.cursor()
